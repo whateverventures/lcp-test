@@ -1,0 +1,22 @@
+name: LCP Compliance Check
+on:
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  lcp-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install pygithub requests
+      - name: Run LCP Bot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: python lcp_bot.py
+      
